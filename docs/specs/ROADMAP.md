@@ -11,7 +11,7 @@
 - [T02 — Local persistence](task-foundation/T02-local-persistence.md) — `repository_finalized`
 
 ### app-shell — `feature/app-shell`
-- [T03 — App shell](app-shell/T03-app-shell.md) — `planned`
+- [T03 — App shell](app-shell/T03-app-shell.md) — `repository_finalized`
 - [T04 — Shared UI primitives](app-shell/T04-ui-primitives.md) — `planned`
 
 ### today-tasks — `feature/today-tasks`
