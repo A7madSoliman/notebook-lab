@@ -44,7 +44,7 @@ Notebook Lab is a small personal task and productivity application. The current 
 
 - None. Do not add a dependency merely for convenience. Before proposing one, state the problem, how the existing stack can solve it, and why the dependency is justified over that option.
 
-## Architecture direction
+## Repository structure and architecture
 
 Keep route files thin and preserve the following dependency direction:
 
@@ -56,14 +56,19 @@ Future API work should replace only the implementation behind that boundary:
 
 For this App Router project, keep pages and layouts server components by default. Put only interactive task UI and browser persistence behind small client-component boundaries. UI components must not read or write `localStorage` or mock arrays directly.
 
-When implementation begins, favor a small structure such as:
+Keep the repository shallow and feature-oriented. Preserve the existing root-level `app/`; do not move it to `src/` without a concrete requirement. Do not create empty architecture folders in advance; a developer should normally reach a product file within roughly 2–4 directories from the root.
 
-- `app/` — routes, layout, route-level composition.
-- `features/tasks/` — task views, feature hooks/actions, and feature-specific UI.
-- `domain/tasks/` — task types and pure derived calculations.
-- `data/tasks/` — repository interface and local persistence implementation.
+When implementation begins, favor the smallest structure that communicates ownership:
 
-Adapt names and placement if a later task establishes an existing convention; do not add layers before they have a job.
+- `app/` — Next.js routes, layouts, metadata, and thin route composition.
+- `features/tasks/` — task-specific UI and interaction/application logic; add `components/` or `hooks/` only once files require them.
+- `domain/tasks/` — pure types, rules, and derived calculations; no React, browser storage, or presentation dependencies.
+- `data/tasks/` — repository contracts, local persistence adapters, and later API adapters.
+- `components/ui/` — genuinely reused visual primitives only.
+- `lib/` — genuinely generic infrastructure helpers, never a feature-logic dumping ground.
+- `docs/` — durable documentation, never runtime source.
+
+Ownership: route/layout → `app/`; task UI/interaction → `features/tasks/`; task rules/calculations → `domain/tasks/`; persistence/backend-facing code → `data/tasks/`; shared visual primitive → `components/ui/`; generic infrastructure → `lib/`. If ownership is unclear, keep code close to its feature. Avoid generic top-level `hooks/`, `utils/`, `types/`, or `services/` folders when ownership is feature-specific. Avoid deep paths such as `features/tasks/presentation/components/forms/create/fields/`.
 
 ## Data and API readiness
 
@@ -96,6 +101,21 @@ Derived daily and monthly values belong in reusable domain or feature logic: tot
 - Keep state local where practical, avoid unnecessary effects and re-renders, and keep the DOM modest.
 - Motion must be subtle and purposeful (for example completion, insertion/removal, or dialog transitions) and respect `prefers-reduced-motion`.
 
+## Visual direction
+
+Notebook Lab should be simple, calm, clean, lightweight, uncluttered, easy to scan, visually consistent, and comfortable for repeated daily use. Clarity is more important than decoration: every visible element needs a purpose.
+
+- Use generous but efficient spacing, readable typography and line heights, restrained color, accessible contrast, obvious primary actions, clear task states, useful subtle borders/shadows, consistent radius/spacing, strong mobile usability, and large touch targets.
+- Daily task management is primary. Summary/statistics UI is secondary and lightweight—use grouped information such as “Today / 12 tasks / 8 completed / 67%” rather than unnecessary cards or a dashboard treatment.
+- Avoid default glassmorphism, excessive gradients/shadows/color/animation, oversized dashboard UI, decorative cards, visual noise, and effects that compete with tasks.
+
+## Design system and motion
+
+- Use Tailwind and small project-owned primitives; do not introduce a component library now.
+- Establish repeated spacing, typography, radii, surfaces, borders, focus treatment, and motion timing incrementally. Promote Button/Input-like controls to `components/ui/` only after real reuse; keep feature controls within the feature.
+- Responsive design is not desktop shrinking. Account for reflow, title wrapping, touch/input ergonomics, action placement, overflow, summary layout, spacing, and mobile keyboard behavior at desktop, laptop, tablet, mobile, and small-mobile widths. Never hide essential functionality for layout convenience.
+- Motion is optional and purposeful: creation, completion/reopen feedback, removal, dialogs, and lightweight state transitions are reasonable candidates. It must clarify change, stay subtle, avoid blocking interaction/layout thrashing, and respect `prefers-reduced-motion`. Do not add an animation library until CSS/React is insufficient for a concrete need.
+
 ## Delegation workflow
 
 - Main Codex: planning, architecture, orchestration, and independent final verification.
@@ -111,10 +131,27 @@ Derived daily and monthly values belong in reusable domain or feature logic: tot
 - Planned branches: `feature/task-foundation`, `feature/app-shell`, `feature/today-tasks`, `feature/daily-summary`, `feature/monthly-summary`, and `feature/ux-quality`.
 - Task lifecycle: plan → plan review → implementation → independent Codex verification → commit only after PASS → push the feature branch.
 - Feature lifecycle: complete feature tasks → final verification → push → PR to `main` → verify PR scope → merge → synchronize local `main` → create the next branch from updated `main`. Preserve meaningful task commits; do not automatically squash them.
-- Prefer Antigravity for post-verification Git operations only when its GitHub access is verified in the current environment. Main Codex is the fallback. OpenCode never performs Git mutations. Revalidate access after credential or environment changes.
+- Antigravity Git/GitHub execution is currently unavailable: its sandboxed authentication/environment probe failed. Main Codex is the active post-verification Git executor in this environment. Do not retry Antigravity on every task; re-test only after its credentials or environment are intentionally repaired or changed. OpenCode never performs Git mutations.
 - Git work is a separate post-verification phase: inspect staged changes before every commit; commit no unrelated files, secrets, tokens, `.env` files, or machine-specific sensitive data; never silently include untracked files. Delegates do not commit during implementation.
 - Never use destructive Git commands, force-push, or commit before Codex verification passes unless the user explicitly authorizes the exceptional action.
 - Prefer one meaningful commit per completed task and clear Conventional Commit-style messages, for example `feat(tasks): add task repository contract` or `docs: update project context`.
+- For each verified task on a feature branch: implementation → Codex verification → PASS → inspect diff/status → stage only intended files → commit → push the current branch. Never commit failed, unverified, or unrelated work.
+- After the last feature task: run final feature verification → push → create a PR to `main` → inspect its scope/diff → merge with a normal merge commit → synchronize local `main` with `origin/main` → verify equality → then branch again. Never merge a partially complete feature.
+
+## Execution roadmap
+
+This directional roadmap contains the final context task plus 14 product tasks (15 planned tasks in this phase). A later verified finding may split or adjust a task when necessary, but must not silently expand scope.
+
+- Bootstrap: T00 project discovery; T00.1 Git/GitHub workflow; T00.2 context, structure, and visual direction.
+- `feature/task-foundation`: T01 task domain model and repository contract; T02 local persistence plus async/error semantics; final verification → PR → merge.
+- `feature/app-shell`: T03 responsive application shell; T04 only shared UI primitives currently required; final verification → PR → merge.
+- `feature/today-tasks`: T05 today list and relevant loading/empty/error states; T06 create task; T07 complete/reopen; T08 edit/delete; final verification → PR → merge.
+- `feature/daily-summary`: T09 daily derived statistics and lightweight summary UI; final verification → PR → merge.
+- `feature/monthly-summary`: T10 monthly aggregation/domain logic; T11 monthly summary and completion percentage UI; final verification → PR → merge.
+- `feature/ux-quality`: T12 responsive/accessibility audit and fixes; T13 purposeful motion and performance polish; final verification → PR → merge.
+- Final: T14 regression, architecture, persistence, and future API-readiness audit.
+
+For every substantial task, Main Codex reads this context and relevant code, produces a bounded plan, obtains up to two OpenCode plan-review rounds, evaluates rather than blindly applying critique, delegates approved implementation to Antigravity, and independently verifies the result. Main Codex owns final architecture decisions.
 
 ## Scope and Git safety
 
