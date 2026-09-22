@@ -8,6 +8,12 @@
 
 Current Git executor: Main Codex. Antigravity Git remains disabled until intentionally repaired and revalidated.
 
+## Antigravity execution environment
+
+On the current Windows environment, Antigravity authentication is available to the host user session but not to the Codex sandbox identity. All delegated `agy` implementation runs must therefore use the authenticated host/elevated execution context (`sandbox:false`, or the equivalent supported host mechanism). Do not request interactive authentication when host `agy models` succeeds. Do not copy, export, print, or store Antigravity credentials in the repository, and do not globally disable sandboxing for unrelated tools. If the execution environment changes, Main Codex may re-probe host and sandbox access and remove this requirement only after both contexts are verified equivalent.
+
+Main Codex orchestrates delegation and explicitly requests host execution for `agy` when required. OpenCode remains the normal configured read-only reviewer. Antigravity remains the implementation lane using `gemini-3.8-flash-low` with `effort: low`; the host-execution rule is an Antigravity-specific exception.
+
 ## Standard task flow
 
 Read context, feature/task specs, and code → Codex Plan → OpenCode Review → Codex Revision → optional second review → Antigravity Implementation → Codex Verification → Technical PASS → evidence-rich report → STOP → external review → approval → next prompt finalizes Git.
@@ -73,9 +79,21 @@ Every report awaiting external review must include:
 
 Architecture/data reports should include concise signatures or representative snippets when they improve reviewability, never the full diff unless requested. Every report ends exactly with:
 
+- After Technical PASS:
+
 ```text
 Git finalization:
 NOT STARTED — awaiting external review approval.
+
+Next task:
+NOT STARTED.
+```
+
+- If blocked or failed before Technical PASS:
+
+```text
+Git finalization:
+NOT APPLICABLE — task has not reached Technical PASS.
 
 Next task:
 NOT STARTED.

@@ -17,3 +17,4 @@ Before any substantial task:
 3. Read the current `FEATURE.md` and `Txx` spec, then inspect the real code before planning.
 4. Follow the external-review Git approval gate; technical PASS does not authorize Git finalization.
 5. Keep work bounded. Never silently expand scope or modify unrelated user/delegation files, including `.agents/`, `.delegate/`, and `skills-lock.json`.
+6. Antigravity implementation runs must follow the authenticated host-execution requirement documented in [docs/WORKFLOW.md](docs/WORKFLOW.md).
