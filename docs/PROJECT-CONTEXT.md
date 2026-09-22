@@ -73,7 +73,15 @@ Ownership: route/layout → `app/`; task UI/interaction → `features/tasks/`; t
 ## Data and API readiness
 
 - Define a repository interface around task operations; feature logic depends on that interface, not on storage details.
+- Task dates are user-local `YYYY-MM-DD` calendar values; `createdAt` and `updatedAt` are ISO instants.
+- Repository date ranges use inclusive calendar dates (`from` and `to`).
+- JavaScript `Date` objects do not cross repository contracts.
 - The initial implementation may use a local browser persistence adapter. Handle browser-only access inside the adapter/client boundary.
+- Persist tasks locally under the versioned key `notebook-lab.tasks.v1`.
+- Malformed or corrupt persisted data is preserved and surfaced as a data error rather than silently reset, cleared, or overwritten.
+- Storage failures (unavailability, read, write) surface at the data boundary with stable error codes.
+- Update requires an existing task; deleting a non-existent task is an idempotent no-op.
+- Invalid date inputs and inverted date ranges fail explicitly at the boundary.
 - Keep API mapping, authentication, transport details, and server contracts out of UI and domain code. Do not invent the future API shape.
 
 ## Temporary domain assumptions
@@ -123,24 +131,35 @@ Notebook Lab should be simple, calm, clean, lightweight, uncluttered, easy to sc
 - Antigravity `implementation` lane: implements an approved plan within scope.
 - Standard flow: Codex plan → OpenCode review → Codex revision → optional second OpenCode review → Antigravity implementation → Codex verification. Limit plan review to two rounds.
 - Delegates may not make broad architectural changes without explicit main-orchestrator approval.
+- OpenCode performs no Git mutation. Antigravity makes no architecture decision outside an approved plan and never commits or pushes. Main Codex owns planning, reviewer evaluation, verification, reporting, and Git finalization only after external approval. The external/user reviewer decides whether a technically passing task may enter Git history.
+
+## Task review and Git approval gate
+
+Every substantial task: read this context → inspect scope → Codex plan → read-only OpenCode review → Codex final plan → Antigravity implementation → Codex independent verification and relevant lint/type/build checks → final task report → STOP.
+
+Technical PASS means the implementation passed Codex verification and project checks. It is not authorization to finalize Git. A passing task enters `IMPLEMENTATION_PASS_AWAITING_EXTERNAL_REVIEW`; this is expected, not an error.
+
+Until explicit external/user approval, do not stage, commit, push, create a PR, merge, or begin the next task. Every implementation report must state technical status, branch, plan-review results, implementation summary, changed files, verification results, scope compliance, outstanding risks/findings, and Git status, then end with `Git finalization: NOT STARTED — awaiting external review approval.` and `Next task: NOT STARTED.`
+
+The next prompt after approval begins with **Phase A — Finalize Previous Approved Task**: verify the expected branch, status, complete approved diff, unchanged state, and absence of unrelated files; rerun targeted verification only if state materially changed; then stage only approved files, commit, push, and verify local HEAD equals the remote branch HEAD. Only then begins **Phase B — Execute Current Task**.
+
+If external review rejects work, do not commit it. The next prompt is a correction task: analyze findings → bounded correction plan → plan review when materially needed → implementation → Codex verification → updated report → STOP for external approval again.
 
 ## Repository and Git workflow
 
 - Repository: `A7madSoliman/notebook-lab`; stable/default branch: `main`.
 - Use one branch per product feature. Multiple scoped task commits may live on that branch; never implement product work directly on `main`. Start every feature branch from the latest verified `main`.
 - Planned branches: `feature/task-foundation`, `feature/app-shell`, `feature/today-tasks`, `feature/daily-summary`, `feature/monthly-summary`, and `feature/ux-quality`.
-- Task lifecycle: plan → plan review → implementation → independent Codex verification → commit only after PASS → push the feature branch.
-- Feature lifecycle: complete feature tasks → final verification → push → PR to `main` → verify PR scope → merge → synchronize local `main` → create the next branch from updated `main`. Preserve meaningful task commits; do not automatically squash them.
+- Each externally approved task receives its own commit on its feature branch, but Git finalization occurs only through the next-prompt Phase A gate. T01 was already finalized under the previous workflow; preserve that history accurately.
+- A feature stays open until every assigned task is externally approved and repository-finalized. After the last approved task is finalized: run feature-level verification → push → create and inspect a PR to `main` → merge with a normal merge commit → synchronize local `main` with `origin/main` → verify equality → create the next feature branch. Never merge a feature with an unreviewed task.
 - Antigravity Git/GitHub execution is currently unavailable: its sandboxed authentication/environment probe failed. Main Codex is the active post-verification Git executor in this environment. Do not retry Antigravity on every task; re-test only after its credentials or environment are intentionally repaired or changed. OpenCode never performs Git mutations.
-- Git work is a separate post-verification phase: inspect staged changes before every commit; commit no unrelated files, secrets, tokens, `.env` files, or machine-specific sensitive data; never silently include untracked files. Delegates do not commit during implementation.
+- Git work is a separate post-approval phase: inspect staged changes before every commit; commit no unrelated files, secrets, tokens, `.env` files, or machine-specific sensitive data; never silently include untracked files. Delegates do not commit during implementation.
 - Never use destructive Git commands, force-push, or commit before Codex verification passes unless the user explicitly authorizes the exceptional action.
 - Prefer one meaningful commit per completed task and clear Conventional Commit-style messages, for example `feat(tasks): add task repository contract` or `docs: update project context`.
-- For each verified task on a feature branch: implementation → Codex verification → PASS → inspect diff/status → stage only intended files → commit → push the current branch. Never commit failed, unverified, or unrelated work.
-- After the last feature task: run final feature verification → push → create a PR to `main` → inspect its scope/diff → merge with a normal merge commit → synchronize local `main` with `origin/main` → verify equality → then branch again. Never merge a partially complete feature.
 
 ## Execution roadmap
 
-This directional roadmap contains the final context task plus 14 product tasks (15 planned tasks in this phase). A later verified finding may split or adjust a task when necessary, but must not silently expand scope.
+This directional roadmap contains the final context task plus 14 product tasks (15 planned tasks in this phase). A later verified finding may split or adjust a task when necessary, but must not silently expand scope. Every feature-level verification, PR, and merge below occurs only after its tasks are externally approved and Repository Finalized.
 
 - Bootstrap: T00 project discovery; T00.1 Git/GitHub workflow; T00.2 context, structure, and visual direction.
 - `feature/task-foundation`: T01 task domain model and repository contract; T02 local persistence plus async/error semantics; final verification → PR → merge.
@@ -161,4 +180,6 @@ For every substantial task, Main Codex reads this context and relevant code, pro
 
 ## Definition of done
 
-A completed task meets its acceptance criteria, respects this architecture and scope, handles relevant UI states, is accessible and responsive, keeps persistence out of UI, verifies its own changes with available project checks, and leaves unrelated work untouched.
+**Implementation Done:** acceptance criteria met; architecture and scope respected; relevant UI requirements met; verification passed; report produced; awaiting external review.
+
+**Repository Finalized:** explicit external approval received; only intended changes committed; branch pushed and synchronized. A feature is not integration-complete until all its tasks are Repository Finalized and its verified PR is merged.
