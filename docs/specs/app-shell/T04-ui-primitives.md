@@ -4,7 +4,7 @@ feature: app-shell
 branch: feature/app-shell
 depends_on:
   - T03
-status: planned
+status: repository_finalized
 ---
 
 # T04 — Shared UI Primitives

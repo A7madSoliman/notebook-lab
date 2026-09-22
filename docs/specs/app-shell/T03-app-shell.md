@@ -4,7 +4,7 @@ feature: app-shell
 branch: feature/app-shell
 depends_on:
   - T02
-status: planned
+status: repository_finalized
 ---
 
 # T03 — Application Shell
