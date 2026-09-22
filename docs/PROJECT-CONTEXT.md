@@ -77,6 +77,11 @@ Ownership: route/layout → `app/`; task UI/interaction → `features/tasks/`; t
 - Repository date ranges use inclusive calendar dates (`from` and `to`).
 - JavaScript `Date` objects do not cross repository contracts.
 - The initial implementation may use a local browser persistence adapter. Handle browser-only access inside the adapter/client boundary.
+- Persist tasks locally under the versioned key `notebook-lab.tasks.v1`.
+- Malformed or corrupt persisted data is preserved and surfaced as a data error rather than silently reset, cleared, or overwritten.
+- Storage failures (unavailability, read, write) surface at the data boundary with stable error codes.
+- Update requires an existing task; deleting a non-existent task is an idempotent no-op.
+- Invalid date inputs and inverted date ranges fail explicitly at the boundary.
 - Keep API mapping, authentication, transport details, and server contracts out of UI and domain code. Do not invent the future API shape.
 
 ## Temporary domain assumptions
