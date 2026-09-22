@@ -1,36 +1,20 @@
-"use client";
-
-import { useEffect, useState, useCallback, useTransition } from "react";
 import { Surface } from "@/components/ui/surface";
 import type { Task } from "@/domain/tasks/task.types";
-import { getTodayDate } from "./get-today-date";
-import { loadTodayTasks } from "./load-today-tasks";
 
-type ViewState =
-  | { status: "loading" }
-  | { status: "success"; tasks: Task[] }
-  | { status: "error"; message: string };
+interface TodayTaskListProps {
+  tasks: Task[];
+  status: "loading" | "success" | "error";
+  errorMessage?: string;
+  onRetry?: () => void;
+}
 
-export function TodayTaskList() {
-  const [state, setState] = useState<ViewState>({ status: "loading" });
-  const [isPending, startTransition] = useTransition();
-
-  const loadTasks = useCallback(() => {
-    startTransition(() => {
-      setState({ status: "loading" });
-      const today = getTodayDate();
-
-      loadTodayTasks(today).then((result) => {
-        setState(result);
-      });
-    });
-  }, []);
-
-  useEffect(() => {
-    loadTasks();
-  }, [loadTasks]);
-
-  if (state.status === "loading" || isPending) {
+export function TodayTaskList({
+  tasks,
+  status,
+  errorMessage,
+  onRetry,
+}: TodayTaskListProps) {
+  if (status === "loading") {
     return (
       <Surface className="p-6 sm:p-10 text-center flex flex-col items-center justify-center min-h-[220px]">
         <div
@@ -48,27 +32,29 @@ export function TodayTaskList() {
     );
   }
 
-  if (state.status === "error") {
+  if (status === "error") {
     return (
       <Surface className="p-6 sm:p-10 text-center flex flex-col items-center justify-center min-h-[220px]">
         <div className="max-w-sm flex flex-col items-center gap-3" role="alert">
           <h2 className="text-base font-medium text-foreground">
             Error loading tasks
           </h2>
-          <p className="text-sm text-muted break-words">{state.message}</p>
-          <button
-            type="button"
-            onClick={loadTasks}
-            className="mt-2 inline-flex items-center justify-center rounded-md border border-border bg-surface px-3 py-1.5 text-xs font-medium text-foreground hover:bg-surface-subtle focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent cursor-pointer transition-colors"
-          >
-            Retry
-          </button>
+          <p className="text-sm text-muted break-words">
+            {errorMessage || "Unable to load tasks for today. Please try again."}
+          </p>
+          {onRetry && (
+            <button
+              type="button"
+              onClick={onRetry}
+              className="mt-2 inline-flex items-center justify-center rounded-md border border-border bg-surface px-3 py-1.5 text-xs font-medium text-foreground hover:bg-surface-subtle focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent cursor-pointer transition-colors"
+            >
+              Retry
+            </button>
+          )}
         </div>
       </Surface>
     );
   }
-
-  const { tasks } = state;
 
   if (tasks.length === 0) {
     return (

@@ -1,5 +1,5 @@
 import { Surface } from "@/components/ui/surface";
-import { TodayTaskList } from "@/features/tasks/today-task-list";
+import { TodayTasksSection } from "@/features/tasks/today-tasks-section";
 
 export default function Home() {
   return (
@@ -29,7 +29,7 @@ export default function Home() {
             </p>
           </div>
 
-          <TodayTaskList />
+          <TodayTasksSection />
         </section>
 
         <section aria-labelledby="context-heading">
