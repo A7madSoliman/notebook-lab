@@ -73,6 +73,9 @@ Ownership: route/layout → `app/`; task UI/interaction → `features/tasks/`; t
 ## Data and API readiness
 
 - Define a repository interface around task operations; feature logic depends on that interface, not on storage details.
+- Task dates are user-local `YYYY-MM-DD` calendar values; `createdAt` and `updatedAt` are ISO instants.
+- Repository date ranges use inclusive calendar dates (`from` and `to`).
+- JavaScript `Date` objects do not cross repository contracts.
 - The initial implementation may use a local browser persistence adapter. Handle browser-only access inside the adapter/client boundary.
 - Keep API mapping, authentication, transport details, and server contracts out of UI and domain code. Do not invent the future API shape.
 
