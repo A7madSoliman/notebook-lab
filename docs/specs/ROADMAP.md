@@ -12,7 +12,7 @@
 
 ### app-shell — `feature/app-shell`
 - [T03 — App shell](app-shell/T03-app-shell.md) — `repository_finalized`
-- [T04 — Shared UI primitives](app-shell/T04-ui-primitives.md) — `planned`
+- [T04 — Shared UI primitives](app-shell/T04-ui-primitives.md) — `repository_finalized`
 
 ### today-tasks — `feature/today-tasks`
 - [T05 — Today task list](today-tasks/T05-today-list.md) — `planned`

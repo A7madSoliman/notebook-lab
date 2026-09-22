@@ -1,3 +1,5 @@
+import { Surface } from "@/components/ui/surface";
+
 export default function Home() {
   return (
     <div className="min-h-full flex flex-col bg-background text-foreground">
@@ -26,7 +28,7 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="rounded-lg border border-border bg-surface p-6 sm:p-10 text-center flex flex-col items-center justify-center min-h-[220px]">
+          <Surface className="p-6 sm:p-10 text-center flex flex-col items-center justify-center min-h-[220px]">
             <div className="max-w-sm flex flex-col items-center gap-2">
               <h2 className="text-base font-medium text-foreground">
                 No tasks for today
@@ -35,16 +37,18 @@ export default function Home() {
                 Your workspace is clear. Tasks created for today will appear here.
               </p>
             </div>
-          </div>
+          </Surface>
         </section>
 
-        <section aria-labelledby="context-heading" className="rounded-lg border border-border-subtle bg-surface-subtle p-4 sm:p-5">
-          <h2 id="context-heading" className="text-xs font-semibold uppercase tracking-wider text-muted mb-1.5">
-            About Notebook Lab
-          </h2>
-          <p className="text-xs sm:text-sm text-muted leading-relaxed">
-            A quiet personal productivity notebook designed for focused daily planning, intentional tracking, and steady progress.
-          </p>
+        <section aria-labelledby="context-heading">
+          <Surface tone="subtle" className="p-4 sm:p-5">
+            <h2 id="context-heading" className="text-xs font-semibold uppercase tracking-wider text-muted mb-1.5">
+              About Notebook Lab
+            </h2>
+            <p className="text-xs sm:text-sm text-muted leading-relaxed">
+              A quiet personal productivity notebook designed for focused daily planning, intentional tracking, and steady progress.
+            </p>
+          </Surface>
         </section>
       </main>
 
