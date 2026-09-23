@@ -18,7 +18,7 @@
 - [T05 — Today task list](today-tasks/T05-today-list.md) — `implementation_pass_awaiting_external_review`
 - [T06 — Create task](today-tasks/T06-create-task.md) — `repository_finalized`
 - [T07 — Complete/reopen](today-tasks/T07-complete-reopen.md) — `repository_finalized`
-- [T08 — Edit/delete](today-tasks/T08-edit-delete.md) — `planned`
+- [T08 — Edit/delete](today-tasks/T08-edit-delete.md) — `implementation_pass_awaiting_external_review`
 
 ### daily-summary — `feature/daily-summary`
 - [T09 — Daily summary](daily-summary/T09-daily-summary.md) — `planned`

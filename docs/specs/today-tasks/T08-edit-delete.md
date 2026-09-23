@@ -4,7 +4,7 @@ feature: today-tasks
 branch: feature/today-tasks
 depends_on:
   - T07
-status: planned
+status: implementation_pass_awaiting_external_review
 ---
 
 # T08 — Edit and Delete
