@@ -15,10 +15,10 @@
 - [T04 — Shared UI primitives](app-shell/T04-ui-primitives.md) — `repository_finalized`
 
 ### today-tasks — `feature/today-tasks`
-- [T05 — Today task list](today-tasks/T05-today-list.md) — `implementation_pass_awaiting_external_review`
+- [T05 — Today task list](today-tasks/T05-today-list.md) — `repository_finalized`
 - [T06 — Create task](today-tasks/T06-create-task.md) — `repository_finalized`
 - [T07 — Complete/reopen](today-tasks/T07-complete-reopen.md) — `repository_finalized`
-- [T08 — Edit/delete](today-tasks/T08-edit-delete.md) — `implementation_pass_awaiting_external_review`
+- [T08 — Edit/delete](today-tasks/T08-edit-delete.md) — `repository_finalized`
 
 ### daily-summary — `feature/daily-summary`
 - [T09 — Daily summary](daily-summary/T09-daily-summary.md) — `planned`
