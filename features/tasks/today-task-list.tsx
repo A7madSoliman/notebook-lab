@@ -6,6 +6,9 @@ interface TodayTaskListProps {
   status: "loading" | "success" | "error";
   errorMessage?: string;
   onRetry?: () => void;
+  pendingTaskIds?: Record<string, boolean>;
+  taskErrors?: Record<string, string>;
+  onTaskCompletionChange?: (task: Task, completed: boolean) => void;
 }
 
 export function TodayTaskList({
@@ -13,6 +16,9 @@ export function TodayTaskList({
   status,
   errorMessage,
   onRetry,
+  pendingTaskIds = {},
+  taskErrors = {},
+  onTaskCompletionChange,
 }: TodayTaskListProps) {
   if (status === "loading") {
     return (
@@ -82,14 +88,18 @@ export function TodayTaskList({
             key={task.id}
             className="flex items-start gap-3 p-4 sm:px-6 hover:bg-surface-subtle/50 transition-colors"
           >
-            <span
-              className={`mt-1 inline-flex h-3.5 w-3.5 shrink-0 rounded-full border ${
-                task.completed
-                  ? "border-muted bg-muted"
-                  : "border-border bg-transparent"
-              }`}
-              aria-hidden="true"
-            />
+            <label className="mt-0.5 flex min-h-7 min-w-7 shrink-0 items-center justify-center rounded-md focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-accent">
+              <input
+                type="checkbox"
+                checked={task.completed}
+                onChange={(event) =>
+                  onTaskCompletionChange?.(task, event.target.checked)
+                }
+                disabled={pendingTaskIds[task.id]}
+                aria-label={`${task.completed ? "Reopen" : "Complete"} task: ${task.title}`}
+                className="h-4 w-4 cursor-pointer accent-accent disabled:cursor-wait disabled:opacity-50"
+              />
+            </label>
             <div className="flex-1 min-w-0">
               <span
                 className={`block text-sm break-words leading-relaxed ${
@@ -103,6 +113,29 @@ export function TodayTaskList({
               <span className="sr-only">
                 {task.completed ? "Status: Completed" : "Status: Incomplete"}
               </span>
+              {pendingTaskIds[task.id] && (
+                <span className="block text-xs text-muted" aria-live="polite">
+                  Updating task…
+                </span>
+              )}
+              {taskErrors[task.id] && (
+                <div className="mt-1 flex flex-wrap items-center gap-2">
+                  <span
+                    className="block text-xs text-red-600 dark:text-red-400 break-words"
+                    role="alert"
+                  >
+                    {taskErrors[task.id]}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => onTaskCompletionChange?.(task, !task.completed)}
+                    disabled={pendingTaskIds[task.id]}
+                    className="text-xs font-medium text-accent underline underline-offset-2 disabled:opacity-50"
+                  >
+                    Retry
+                  </button>
+                </div>
+              )}
             </div>
           </li>
         ))}

@@ -4,7 +4,7 @@ feature: today-tasks
 branch: feature/today-tasks
 depends_on:
   - T06
-status: planned
+status: repository_finalized
 ---
 
 # T07 — Complete and Reopen
