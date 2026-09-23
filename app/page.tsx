@@ -1,4 +1,5 @@
 import { Surface } from "@/components/ui/surface";
+import { TodayTasksSection } from "@/features/tasks/today-tasks-section";
 
 export default function Home() {
   return (
@@ -28,16 +29,7 @@ export default function Home() {
             </p>
           </div>
 
-          <Surface className="p-6 sm:p-10 text-center flex flex-col items-center justify-center min-h-[220px]">
-            <div className="max-w-sm flex flex-col items-center gap-2">
-              <h2 className="text-base font-medium text-foreground">
-                No tasks for today
-              </h2>
-              <p className="text-sm text-muted">
-                Your workspace is clear. Tasks created for today will appear here.
-              </p>
-            </div>
-          </Surface>
+          <TodayTasksSection />
         </section>
 
         <section aria-labelledby="context-heading">

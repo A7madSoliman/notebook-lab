@@ -4,7 +4,7 @@ feature: today-tasks
 branch: feature/today-tasks
 depends_on:
   - T07
-status: planned
+status: repository_finalized
 ---
 
 # T08 — Edit and Delete

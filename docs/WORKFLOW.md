@@ -14,6 +14,8 @@ On the current Windows environment, Antigravity authentication is available to t
 
 Main Codex orchestrates delegation and explicitly requests host execution for `agy` when required. OpenCode remains the normal configured read-only reviewer. Antigravity remains the implementation lane using `gemini-3.8-flash-low` with `effort: low`; the host-execution rule is an Antigravity-specific exception.
 
+Required-lane failure does not authorize silent role substitution. If OpenCode plan review or Antigravity implementation cannot complete, stop before Technical PASS, report the exact blocker, and do not have Main Codex perform that lane's role. Resume only after a successful retry once the issue is resolved or under an explicit external one-time exception naming the authorized substitution, scope, and recovery review/verification; preserve execution provenance in the final report. Such an exception does not change normal lane ownership, and fallback execution must not be described retroactively as normal workflow.
+
 ## Standard task flow
 
 Read context, feature/task specs, and code → Codex Plan → OpenCode Review → Codex Revision → optional second review → Antigravity Implementation → Codex Verification → Technical PASS → evidence-rich report → STOP → external review → approval → next prompt finalizes Git.

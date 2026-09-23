@@ -15,10 +15,10 @@
 - [T04 — Shared UI primitives](app-shell/T04-ui-primitives.md) — `repository_finalized`
 
 ### today-tasks — `feature/today-tasks`
-- [T05 — Today task list](today-tasks/T05-today-list.md) — `planned`
-- [T06 — Create task](today-tasks/T06-create-task.md) — `planned`
-- [T07 — Complete/reopen](today-tasks/T07-complete-reopen.md) — `planned`
-- [T08 — Edit/delete](today-tasks/T08-edit-delete.md) — `planned`
+- [T05 — Today task list](today-tasks/T05-today-list.md) — `repository_finalized`
+- [T06 — Create task](today-tasks/T06-create-task.md) — `repository_finalized`
+- [T07 — Complete/reopen](today-tasks/T07-complete-reopen.md) — `repository_finalized`
+- [T08 — Edit/delete](today-tasks/T08-edit-delete.md) — `repository_finalized`
 
 ### daily-summary — `feature/daily-summary`
 - [T09 — Daily summary](daily-summary/T09-daily-summary.md) — `planned`

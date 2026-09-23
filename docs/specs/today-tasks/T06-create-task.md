@@ -4,7 +4,7 @@ feature: today-tasks
 branch: feature/today-tasks
 depends_on:
   - T05
-status: planned
+status: repository_finalized
 ---
 
 # T06 — Create Task
