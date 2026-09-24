@@ -21,7 +21,7 @@
 - [T08 — Edit/delete](today-tasks/T08-edit-delete.md) — `repository_finalized`
 
 ### daily-summary — `feature/daily-summary`
-- [T09 — Daily summary](daily-summary/T09-daily-summary.md) — `planned`
+- [T09 — Daily summary](daily-summary/T09-daily-summary.md) — `repository_finalized`
 
 ### monthly-summary — `feature/monthly-summary`
 - [T10 — Monthly aggregation](monthly-summary/T10-monthly-aggregation.md) — `planned`

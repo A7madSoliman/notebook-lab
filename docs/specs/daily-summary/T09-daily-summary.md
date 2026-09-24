@@ -4,7 +4,7 @@ feature: daily-summary
 branch: feature/daily-summary
 depends_on:
   - T08
-status: planned
+status: repository_finalized
 ---
 
 # T09 — Daily Summary
