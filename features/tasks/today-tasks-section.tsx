@@ -9,6 +9,8 @@ import { TodayTaskList } from "./today-task-list";
 import { updateTaskCompletion } from "./update-task-completion";
 import { updateTaskDetails } from "./update-task-details";
 import { deleteTask } from "./delete-task";
+import { calculateTaskStatistics } from "@/domain/tasks/task-statistics";
+import { DailySummary } from "./daily-summary";
 
 type ViewState =
   | { status: "loading"; tasks: Task[] }
@@ -203,6 +205,10 @@ export function TodayTasksSection() {
         onEditTask={handleEditTask}
         onDeleteTask={handleDeleteTask}
       />
+
+      {state.status === "success" && (
+        <DailySummary statistics={calculateTaskStatistics(state.tasks)} />
+      )}
     </div>
   );
 }
